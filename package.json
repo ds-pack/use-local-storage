@@ -1,21 +1,24 @@
 {
-  "name": "template-project",
-  "version": "0.0.0",
+  "name": "@ds-pack/use-local-storage",
+  "version": "0.1.0",
   "main": "dist/index.js",
-  "source": "src/index.tsx",
+  "source": "src/index.ts",
   "types": "dist/index.d.ts",
-  "repository": "git@github.com:hamlim/template-project.git",
+  "repository": "git@github.com:ds-pack/use-local-storage.git",
   "author": "Matt Hamlin <matthewjameshamlin@gmail.com>",
   "license": "MIT",
   "scripts": {
     "prebuild": "rm -rf dist/",
-    "build": "babel src/ --out-dir dist/ --extensions '.ts,.tsx' && tsc",
+    "build": "yarn prebuild && babel src/ --out-dir dist/ --extensions '.ts,.tsx' && yarn types",
     "test": "jest",
     "test-watch": "jest --watch",
     "test-cov": "jest --collectCoverage",
     "prepub": "yarn build",
     "pub": "yarn prepub && yarn publish --access public",
-    "tsc": "tsc --noEmit"
+    "types": "tsc"
+  },
+  "peerDependencies": {
+    "react": "*"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
