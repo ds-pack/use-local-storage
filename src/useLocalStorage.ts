@@ -21,7 +21,7 @@ export interface Options<Value> {
 }
 
 export function useLocalStorage<Value>(
-  [value, setValue]: [Value, any],
+  [value, dispatch]: [Value, any],
   {
     key,
     hydrate = true,
@@ -29,9 +29,9 @@ export function useLocalStorage<Value>(
     setItem = defaultSetItem,
   }: Options<Value> = {} as Options<Value>,
 ) {
-  if (typeof setValue !== 'function') {
+  if (typeof dispatch !== 'function') {
     throw new TypeError(
-      `Invalid type provided for the second value of the first argument. You provided: ${typeof setValue}`,
+      `Invalid type provided for the second value of the first argument. You provided: ${typeof dispatch}`,
     )
   }
   if (typeof key !== 'string') {
@@ -45,7 +45,7 @@ export function useLocalStorage<Value>(
   useEffect(() => {
     // only hydrate once
     if (hydrate && !mountedRef.current) {
-      setValue(getItem(key))
+      dispatch({ type: 'hydrated', value: getItem(key) })
     }
   }, [key, hydrate, getItem])
 
@@ -57,5 +57,5 @@ export function useLocalStorage<Value>(
     }
   }, [key, value, setItem])
 
-  return [value, setValue]
+  return [value, dispatch]
 }

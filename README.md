@@ -7,10 +7,10 @@ A small hook wrapping the local storage API
 ## API
 
 The library exports a `useLocalStorage` hook that you call with the result of a
-hook that matches the return type of `useState`. The requirement being that the
-value you provide `useLocalStorage` should be an array with at least two values,
-the first being the value to store in local storage, and the second being an
-updater function (e.g. dispatch, setState, etc.).
+hook that matches the return type of `useReducer`. The requirement being that
+the value you provide `useLocalStorage` should be an array with at least two
+values, the first being the value to store in local storage, and the second
+being an updater function (e.g. dispatch).
 
 The second argument for the hook is an options object that supports the
 following:
@@ -33,12 +33,33 @@ yarn add @ds-pack/use-local-storage
 ## Usage:
 
 ```tsx
-import useLocalStorage from '@matthamlin/use-local-storage'
+import { useReducer } from 'react'
+import { useLocalStorage } from '@matthamlin/use-local-storage'
+
+function reducer(state, action) {
+  switch (action.type) {
+    // useLocalStorage will call your dispatch function with
+    //  { type: 'hydrated', value: Value }
+    case 'hydrated':
+    case 'input': {
+      return {
+        ...state,
+        value: action.value,
+      }
+    }
+    default: {
+      return state
+    }
+  }
+}
 
 function Component() {
-  let [value, setValue] = useLocalStorage<string>(useState('foo'), {
-    key: 'your-app',
-  })
+  let [value, setValue] = useLocalStorage<string>(
+    useReducer(reducer, { value: 'foo' }),
+    {
+      key: 'your-app',
+    },
+  )
 
   return (
     <label>
@@ -46,7 +67,7 @@ function Component() {
       <input
         type="text"
         value={value}
-        onChange={({ target: { value } }) => setValue(value)}
+        onChange={({ target: { value } }) => dispatch({ type: 'input', value })}
       />
     </label>
   )

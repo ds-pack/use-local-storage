@@ -91,7 +91,7 @@ test('hydrate and getItem + setItem', () => {
 
   render(<Comp value="bar" hydrate />)
   expect(getItem).toHaveBeenLastCalledWith('foo')
-  expect(setValue).toHaveBeenLastCalledWith('baz')
+  expect(setValue).toHaveBeenLastCalledWith({ type: 'hydrated', value: 'baz' })
 })
 
 test('integration', () => {
@@ -110,7 +110,7 @@ test('integration', () => {
 
   // defaults to hydrating
   expect(setValue).toHaveBeenCalledTimes(1)
-  expect(setValue).toHaveBeenLastCalledWith('baz')
+  expect(setValue).toHaveBeenLastCalledWith({ type: 'hydrated', value: 'baz' })
 
   rerender(<Comp value={{ nested: true }} />)
 
